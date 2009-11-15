@@ -1,0 +1,23 @@
+======================
+File-System-Service
+======================
+
+A computer-independent view and addressing scheme of a common folder.
+
+Allows several computers to talk about the same folder structure 
+(based on a root folder called "project folder"). This means translation
+of path seperators etc. is handled.
+
+Further features:
+
+* Watch for file changes (currently based on polling)
+* Hashing files (SHA-512)
+
+
+Why not just use java File?
+-----------------------------
+
+The FSS is based on File, but a File object is not exchangable between
+computers.
+
+
