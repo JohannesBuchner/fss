@@ -7,7 +7,7 @@
 	<description>
 		A computer-independent view and addressing scheme of a common folder.
 	</description>
-	<version>1.1</version>
+	<version>1.2-SNAPSHOT</version>
 	<url>http://dev.jakeapp.com/projects/fss</url>
 	<scm>
 		<connection>scm:svn:svn://svn.jakeapp.com/trunk/fss</connection>

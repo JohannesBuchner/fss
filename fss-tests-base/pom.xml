@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.jakeapp.jake</groupId>
   <artifactId>fss-tests-base</artifactId>
-  <version>1.1</version>
+  <version>1.2-SNAPSHOT</version>
   <name>fss-tests-base</name>
   <url>http://maven.apache.org</url>
   <dependencies>
