@@ -26,9 +26,9 @@ public class FSServiceOuterTest extends FSServiceTestCase {
 	@Prerequisite(checker = DesktopSupportedChecker.class)
 	public void testGetFullpath() throws Exception {
 		String sep = File.separator;
-		String root = mytempdir;
+		File root = mytempdir;
 
-		Assert.assertEquals("root", root, fss.getFullpath("/"));
+		Assert.assertEquals("root", root.getAbsolutePath(), fss.getFullpath("/"));
 		Assert.assertEquals(fss.getFullpath("testfile.xml"), root + sep + "testfile.xml");
 		Assert.assertEquals(fss.getFullpath("folder/to/testfile.xml"), root + sep
 				+ "folder" + sep + "to" + sep + "testfile.xml");
@@ -218,7 +218,7 @@ public class FSServiceOuterTest extends FSServiceTestCase {
 	@Prerequisite(checker = DesktopSupportedChecker.class)
 	public void testRecursiveListFolder() throws Exception {
 		wipeRoot();
-		recursiveDelete(new File(fss.getRootPath()));
+		recursiveDelete(fss.getRootPath());
 
 		String[] content = { "B", "C", "B/foo", "D", "F", "G", "H", "J", "B/foo/bar",
 				"C/foo" };

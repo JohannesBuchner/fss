@@ -11,7 +11,6 @@ import junit.framework.Assert;
 import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -36,7 +35,7 @@ public class FolderWatchTest extends FSTestCase {
 		log.debug(" **** testCreateFile **** ");
 		File f = new File(mytempdir + File.separator + "just_created");
 		try {
-			fw = new FolderWatcher(new File(mytempdir), 100);
+			fw = new FolderWatcher(mytempdir, 100);
 			fw.initialRun();
 
 			final CountDownLatch latch = new CountDownLatch(1);
@@ -88,7 +87,7 @@ public class FolderWatchTest extends FSTestCase {
 		try {
 			final Semaphore s = new Semaphore(0);
 
-			fw = new FolderWatcher(new File(mytempdir), interval);
+			fw = new FolderWatcher(mytempdir, interval);
 			fw.initialRun();
 
 			fw.addListener(new IModificationListener() {
@@ -143,7 +142,7 @@ public class FolderWatchTest extends FSTestCase {
 
 		try {
 			final Semaphore s = new Semaphore(0);
-			fw = new FolderWatcher(new File(mytempdir), interval);
+			fw = new FolderWatcher(mytempdir, interval);
 			fw.initialRun();
 
 			IModificationListener failer = new IModificationListener() {
@@ -235,7 +234,7 @@ public class FolderWatchTest extends FSTestCase {
 		final Semaphore s = new Semaphore(0);
 
 		try {
-			fw = new FolderWatcher(new File(mytempdir), interval);
+			fw = new FolderWatcher(mytempdir, interval);
 			fw.initialRun();
 
 			fw.addListener(new IModificationListener() {

@@ -4,7 +4,9 @@ import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 
-
+/**
+ * acts like ls -A
+ */
 public class FileUtils {
 
 	static Iterable<String> listMinusA(File f) {

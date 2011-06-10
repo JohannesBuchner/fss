@@ -12,11 +12,11 @@ import com.jakeapp.jake.test.FSTestCommons;
 
 public class FSTestCase {
 
-	protected String mytempdir = null;
+	protected File mytempdir = null;
 
 	@Before
 	public void setUp() throws Exception {
-		mytempdir = FSTestCommons.provideTempDir().getAbsolutePath();
+		mytempdir = FSTestCommons.provideTempDir();
 	}
 
 	protected boolean recursiveDelete(File f) {
@@ -25,7 +25,7 @@ public class FSTestCase {
 
 	@After
 	public void tearDown() throws Exception {
-		File f = new File(mytempdir);
+		File f = mytempdir;
 		if (f.exists()) {
 			Assert.assertTrue("recursiveDelete", recursiveDelete(f));
 		}

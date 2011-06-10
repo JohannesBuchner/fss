@@ -69,7 +69,7 @@ public interface IFSService extends Serializable {
 	 * @return the rootpath set previously by <code>setRootPath</code> if no
 	 *         valid rootpath was set, null is returned.
 	 */
-	public String getRootPath();
+	public ProjectDir getRootPath();
 
 	/**
 	 * Checks wether the relativePath contains characters acceptable for various
@@ -160,7 +160,7 @@ public interface IFSService extends Serializable {
 	 * @throws IOException				if an I/O Error occured
 	 * @throws NotADirectoryException if the path is not a folder
 	 */
-	public void setRootPath(String absolutePath) throws IOException,
+	public void setRootPath(ProjectDir dir) throws IOException,
 			  NotADirectoryException;
 
 	/**

@@ -7,7 +7,6 @@ import junit.framework.Assert;
 import org.apache.log4j.Logger;
 import org.junit.runner.RunWith;
 
-import com.googlecode.junit.ext.Prerequisite;
 import com.googlecode.junit.ext.PrerequisiteAwareClassRunner;
 
 @RunWith(PrerequisiteAwareClassRunner.class)
@@ -18,7 +17,7 @@ public class FSServiceTestCase extends FSTestCase {
 	protected FSService fss = null;
 
 	protected void wipeRoot() {
-		File f = new File(fss.getRootPath());
+		File f = fss.getRootPath();
 		Assert.assertTrue(f.exists() && f.isDirectory());
 		Assert.assertTrue(recursiveDelete(f));
 		f.mkdirs();
@@ -32,7 +31,7 @@ public class FSServiceTestCase extends FSTestCase {
 
 		if ((new DesktopSupportedChecker()).satisfy()) {
 			fss = new FSService();
-			fss.setRootPath(mytempdir);
+			fss.setRootPath(new ProjectDir(mytempdir));
 			Assert.assertEquals("rootpath", mytempdir, fss.getRootPath());
 		}
 	}

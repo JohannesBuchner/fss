@@ -18,14 +18,14 @@ import java.util.regex.Pattern;
 
 /**
  * Implementation of {@link IFSService}
- *
+ * 
  * @author johannes
  * @see IFSService
  */
 public class FSService implements IFSService, IModificationListener {
 	private static Logger log = Logger.getLogger(FSService.class);
 
-	private String rootPath;
+	private ProjectDir rootPath;
 
 	private StreamFileHashCalculator hasher;
 
@@ -40,7 +40,7 @@ public class FSService implements IFSService, IModificationListener {
 		launcher = new FileLauncher();
 	}
 
-	public String getRootPath() {
+	public ProjectDir getRootPath() {
 		return rootPath;
 	}
 
@@ -52,17 +52,16 @@ public class FSService implements IFSService, IModificationListener {
 		modificationListener = null;
 	}
 
-	public void setRootPath(String path)
-					throws FileNotFoundException, NotADirectoryException {
+	public void setRootPath(ProjectDir path) throws FileNotFoundException,
+			NotADirectoryException {
 		unsetRootPath();
-		File f = new File(path);
-		checkFileExists(f);
-		if (!f.isDirectory())
+		checkFileExists(path);
+		if (!path.isDirectory())
 			throw new NotADirectoryException();
-		rootPath = f.getAbsolutePath();
+		rootPath = path;
 
 		try {
-			fw = new FolderWatcher(new File(this.rootPath), 700);
+			fw = new FolderWatcher(this.rootPath, 700);
 		} catch (NoSuchAlgorithmException e) {
 			/* won't happen as we use the same algorithm here and it loaded. */
 		}
@@ -88,7 +87,8 @@ public class FSService implements IFSService, IModificationListener {
 		return f.exists() && f.isFile();
 	}
 
-	public List<String> listFolder(String inrelpath) throws InvalidFilenameException {
+	public List<String> listFolder(String inrelpath)
+			throws InvalidFilenameException {
 		String relpath = inrelpath;
 		while (relpath.startsWith("/")) {
 			relpath = relpath.substring(1);
@@ -129,9 +129,8 @@ public class FSService implements IFSService, IModificationListener {
 	}
 
 	@Deprecated
-	public byte[] readFile(String relpath)
-					throws InvalidFilenameException, FileNotFoundException,
-					NotAReadableFileException {
+	public byte[] readFile(String relpath) throws InvalidFilenameException,
+			FileNotFoundException, NotAReadableFileException {
 
 		String filename = getFullpath(relpath);
 		File f = new File(filename);
@@ -166,14 +165,14 @@ public class FSService implements IFSService, IModificationListener {
 	}
 
 	public InputStream readFileStream(String relpath)
-					throws InvalidFilenameException, FileNotFoundException,
-					NotAReadableFileException {
+			throws InvalidFilenameException, FileNotFoundException,
+			NotAReadableFileException {
 		return readFileStreamAbs(getFullpath(relpath));
 	}
 
 	public static InputStream readFileStreamAbs(String filename)
-					throws InvalidFilenameException, FileNotFoundException,
-					NotAReadableFileException {
+			throws InvalidFilenameException, FileNotFoundException,
+			NotAReadableFileException {
 		File f = new File(filename);
 		checkFileExists(f);
 		checkIsFile(f);
@@ -195,10 +194,12 @@ public class FSService implements IFSService, IModificationListener {
 		if (getRootPath() == null)
 			return null;
 		if (!isValidRelpath(relpath))
-			throw new InvalidFilenameException(
-							"File " + relpath + " is not a valid filename!");
-		File f = new File(joinPath(getRootPath(), relpath));
-		return f.getAbsolutePath();
+			throw new InvalidFilenameException("File " + relpath
+					+ " is not a valid filename!");
+		String fp = new File(getRootPath(), relpath).getAbsolutePath();
+		while (fp.endsWith("/"))
+			fp = fp.substring(0, fp.length() - 1);
+		return fp;
 	}
 
 	public String joinPath(String rootPath, String inrelpath) {
@@ -218,8 +219,9 @@ public class FSService implements IFSService, IModificationListener {
 
 	@Deprecated
 	public void writeFile(String relpath, byte[] content)
-					throws InvalidFilenameException, IOException, FileTooLargeException,
-					NotAFileException, CreatingSubDirectoriesFailedException {
+			throws InvalidFilenameException, IOException,
+			FileTooLargeException, NotAFileException,
+			CreatingSubDirectoriesFailedException {
 		String filename = getFullpath(relpath);
 		File f = new File(filename);
 
@@ -243,14 +245,14 @@ public class FSService implements IFSService, IModificationListener {
 	}
 
 	public void writeFileStream(String relpath, InputStream source)
-					throws InvalidFilenameException, NotAFileException,
-					CreatingSubDirectoriesFailedException, IOException {
+			throws InvalidFilenameException, NotAFileException,
+			CreatingSubDirectoriesFailedException, IOException {
 		writeFileStreamAbs(getFullpath(relpath), source);
 	}
 
 	public static void writeFileStreamAbs(String filename, InputStream source)
-					throws InvalidFilenameException, NotAFileException,
-					CreatingSubDirectoriesFailedException, IOException {
+			throws InvalidFilenameException, NotAFileException,
+			CreatingSubDirectoriesFailedException, IOException {
 		File f = new File(filename);
 
 		if (f.exists() && !f.isFile())
@@ -280,7 +282,7 @@ public class FSService implements IFSService, IModificationListener {
 	}
 
 	public Boolean folderExists(String relpath)
-					throws InvalidFilenameException, IOException {
+			throws InvalidFilenameException, IOException {
 		File f = new File(getFullpath(relpath));
 		return f.exists() && f.isDirectory();
 	}
@@ -302,12 +304,12 @@ public class FSService implements IFSService, IModificationListener {
 		if (!(m.find() && m.start() == 0 && m.end() == relpath.length())) {
 			return false;
 		}
-		return !(relpath.contains("/../") || relpath.startsWith("../") || relpath
-						.endsWith("/..") || relpath.equals(".."));
+		return !(relpath.contains("/../") || relpath.startsWith("../")
+				|| relpath.endsWith("/..") || relpath.equals(".."));
 	}
 
-	public boolean deleteFile(String relpath)
-					throws InvalidFilenameException, FileNotFoundException, NotAFileException {
+	public boolean deleteFile(String relpath) throws InvalidFilenameException,
+			FileNotFoundException, NotAFileException {
 		File f = new File(getFullpath(relpath));
 		log.info("Delete File: " + f);
 		checkFileExists(f);
@@ -316,18 +318,28 @@ public class FSService implements IFSService, IModificationListener {
 			return false;
 
 		/* TODO: Check if this is a infinite loop on a empty drive on windows */
-		do {
-			f = f.getParentFile();
-		} while (f.isDirectory() && f.getAbsolutePath().startsWith(getRootPath()) && f
-						.getAbsolutePath().length() > getRootPath().length() && !FileUtils
-						.listFilesMinusA(f).iterator().hasNext() && f.delete());
+		deleteEmptyFolderRecursive(f.getParentFile());
 
 		return true;
 	}
 
+	private void deleteEmptyFolderRecursive(File f) {
+		if (!f.isDirectory())
+			return;
+		if (!(f.getAbsolutePath().startsWith(getRootPath().getAbsolutePath()) && f
+				.getAbsolutePath().length() > getRootPath().getAbsolutePath()
+				.length()))
+			return;
+		if (FileUtils.listFilesMinusA(f).iterator().hasNext())
+			return;
+		f.delete();
+
+		deleteEmptyFolderRecursive(f.getParentFile());
+	}
+
 	public boolean deleteFolder(String relpath)
-					throws InvalidFilenameException, FileNotFoundException,
-					NotADirectoryException {
+			throws InvalidFilenameException, FileNotFoundException,
+			NotADirectoryException {
 		File f = new File(getFullpath(relpath));
 		log.info("Delete Folder: " + f);
 		checkFileExists(f);
@@ -343,7 +355,9 @@ public class FSService implements IFSService, IModificationListener {
 				try {
 					success = deleteFile(children);
 				} catch (NotAFileException e) {
-					log.warn("Error deleting file: " + childFile.getAbsoluteFile(), e);
+					log.warn(
+							"Error deleting file: "
+									+ childFile.getAbsoluteFile(), e);
 				}
 			}
 			if (!success) {
@@ -355,25 +369,21 @@ public class FSService implements IFSService, IModificationListener {
 		if (!f.delete())
 			return false;
 
-		/* TODO: Check if this is a infinite loop on a empty drive on windows */
-		do {
-			f = f.getParentFile();
-		} while (f.isDirectory() && f.getAbsolutePath().startsWith(getRootPath()) && f
-						.getAbsolutePath().length() > getRootPath().length() && !FileUtils
-						.listFilesMinusA(f).iterator().hasNext() && f.delete());
+		deleteEmptyFolderRecursive(f);
 
 		return true;
 	}
 
 	@Override
 	public boolean trashFile(String relativePath)
-					throws InvalidFilenameException, FileNotFoundException {
+			throws InvalidFilenameException, FileNotFoundException {
 		try {
-			//TODO implement via a REAL trash...
+			// TODO implement via a REAL trash...
 			return deleteFile(relativePath);
 		} catch (NotAFileException e) {
 			log.warn("trash failed for " + relativePath, e);
-			//silently discarded - the file is not there so it is already deleted
+			// silently discarded - the file is not there so it is already
+			// deleted
 		}
 
 		return false;
@@ -381,9 +391,9 @@ public class FSService implements IFSService, IModificationListener {
 
 	@Override
 	public boolean trashFolder(String relativePath)
-					throws InvalidFilenameException, FileNotFoundException {
+			throws InvalidFilenameException, FileNotFoundException {
 		try {
-			//TODO implement via a REAL trash...
+			// TODO implement via a REAL trash...
 			return deleteFolder(relativePath);
 		} catch (NotADirectoryException e) {
 			log.warn("trash failed for " + relativePath, e);
@@ -394,11 +404,10 @@ public class FSService implements IFSService, IModificationListener {
 
 	@Override
 	public boolean copyFile(String from, String to)
-					throws InvalidFilenameException, NotAReadableFileException,
-					FileAlreadyExistsException, IOException,
-					CreatingSubDirectoriesFailedException {
+			throws InvalidFilenameException, NotAReadableFileException,
+			FileAlreadyExistsException, IOException,
+			CreatingSubDirectoriesFailedException {
 		File fileFrom, fileTo;
-		boolean result = true;
 
 		checkIsValidRelPath(to);
 
@@ -416,7 +425,7 @@ public class FSService implements IFSService, IModificationListener {
 
 	/**
 	 * This methode does the actual copying, without the rel/abs path whobbling
-	 *
+	 * 
 	 * @param fileFrom
 	 * @param fileTo
 	 * @return
@@ -424,29 +433,28 @@ public class FSService implements IFSService, IModificationListener {
 	 * @throws FileAlreadyExistsException
 	 * @throws InvalidFilenameException
 	 * @throws CreatingSubDirectoriesFailedException
-	 *
+	 * 
 	 * @throws IOException
 	 */
 	private boolean copyFileInternal(File fileFrom, File fileTo)
-					throws NotAReadableFileException, FileAlreadyExistsException,
-					InvalidFilenameException, CreatingSubDirectoriesFailedException,
-					IOException {
+			throws NotAReadableFileException, FileAlreadyExistsException,
+			InvalidFilenameException, CreatingSubDirectoriesFailedException,
+			IOException {
 		checkFileIsReadable(fileFrom);
 		checkFileNotExists(fileTo);
 
 		// TODO this should be atomic
-		this.writeFileStreamAbs(fileTo.getAbsolutePath(),
-						this.readFileStream(fileFrom.getAbsolutePath()));
+		FSService.writeFileStreamAbs(fileTo.getAbsolutePath(),
+				this.readFileStream(fileFrom.getAbsolutePath()));
 
 		return true;
 	}
 
-
 	@Override
 	public boolean moveFile(String from, String to)
-					throws InvalidFilenameException, NotAReadableFileException,
-					FileAlreadyExistsException, IOException,
-					CreatingSubDirectoriesFailedException {
+			throws InvalidFilenameException, NotAReadableFileException,
+			FileAlreadyExistsException, IOException,
+			CreatingSubDirectoriesFailedException {
 		File fileFrom, fileTo;
 		boolean result = true;
 
@@ -469,13 +477,13 @@ public class FSService implements IFSService, IModificationListener {
 		return result;
 	}
 
-	public void launchFile(String relpath)
-					throws InvalidFilenameException, LaunchException {
+	public void launchFile(String relpath) throws InvalidFilenameException,
+			LaunchException {
 		launcher.launchFile(new File(getFullpath(relpath)));
 	}
 
-	public long getFileSize(String relpath)
-					throws InvalidFilenameException, FileNotFoundException, NotAFileException {
+	public long getFileSize(String relpath) throws InvalidFilenameException,
+			FileNotFoundException, NotAFileException {
 		String filename = getFullpath(relpath);
 		File f = new File(filename);
 		if (!f.exists())
@@ -495,8 +503,8 @@ public class FSService implements IFSService, IModificationListener {
 	}
 
 	public String calculateHashOverFile(String relpath)
-					throws InvalidFilenameException, NotAReadableFileException,
-					FileNotFoundException {
+			throws InvalidFilenameException, NotAReadableFileException,
+			FileNotFoundException {
 		return this.hasher.calculateHash(readFileStream(relpath));
 	}
 
@@ -505,7 +513,7 @@ public class FSService implements IFSService, IModificationListener {
 	}
 
 	public long getLastModified(String relpath)
-					throws InvalidFilenameException, NotAFileException {
+			throws InvalidFilenameException, NotAFileException {
 		if (!fileExists(relpath))
 			throw new NotAFileException();
 		File f = new File(getFullpath(relpath));
@@ -516,8 +524,9 @@ public class FSService implements IFSService, IModificationListener {
 		if (rootPath == null)
 			return;
 
-		String relpath = f.getAbsolutePath().replace(rootPath + File.separator, "")
-						.replace(File.separatorChar, '/');
+		String relpath = f.getAbsolutePath()
+				.replace(rootPath + File.separator, "")
+				.replace(File.separatorChar, '/');
 		if (modificationListener != null) {
 			for (IFileModificationListener l : modificationListener) {
 				l.fileModified(relpath, action);
@@ -532,8 +541,8 @@ public class FSService implements IFSService, IModificationListener {
 	}
 
 	@Override
-	public void createFolder(String relpath)
-					throws InvalidFilenameException, IOException {
+	public void createFolder(String relpath) throws InvalidFilenameException,
+			IOException {
 		File f = new File(this.getFullpath(relpath));
 		if (f.exists())
 			throw new IOException();
@@ -541,16 +550,18 @@ public class FSService implements IFSService, IModificationListener {
 			throw new IOException();
 	}
 
-
-	@Override public void importFile(File file, String destFolderRelPath)
-					throws IOException, InvalidFilenameException, NotAReadableFileException,
-					FileAlreadyExistsException, CreatingSubDirectoriesFailedException {
+	@Override
+	public void importFile(File file, String destFolderRelPath)
+			throws IOException, InvalidFilenameException,
+			NotAReadableFileException, FileAlreadyExistsException,
+			CreatingSubDirectoriesFailedException {
 		log.debug("importing file: " + file + " into " + destFolderRelPath);
 		checkFileExists(file);
 		checkIsValidRelPath(destFolderRelPath);
 
 		if (file.isFile()) {
-			File dest = new File(this.getFullpath(destFolderRelPath), file.getName());
+			File dest = new File(this.getFullpath(destFolderRelPath),
+					file.getName());
 
 			// TODO: save a list of success/fails and return to user
 			try {
@@ -569,7 +580,7 @@ public class FSService implements IFSService, IModificationListener {
 
 	/**
 	 * Internal helper that performs the copying
-	 *
+	 * 
 	 * @param fileFrom
 	 * @param fileTo
 	 * @throws NotAReadableFileException
@@ -577,39 +588,41 @@ public class FSService implements IFSService, IModificationListener {
 	 * @throws InvalidFilenameException
 	 * @throws IOException
 	 * @throws CreatingSubDirectoriesFailedException
-	 *
+	 * 
 	 */
 	private void importFileInternal(File fileFrom, File fileTo)
-					throws NotAReadableFileException, FileAlreadyExistsException,
-					InvalidFilenameException, IOException,
-					CreatingSubDirectoriesFailedException {
+			throws NotAReadableFileException, FileAlreadyExistsException,
+			InvalidFilenameException, IOException,
+			CreatingSubDirectoriesFailedException {
 		checkFileIsReadable(fileFrom);
 		checkFileNotExists(fileTo);
 
 		// TODO this should be atomic
 		writeFileStreamAbs(fileTo.getAbsolutePath(),
-						readFileStreamAbs(fileFrom.getAbsolutePath()));
+				readFileStreamAbs(fileFrom.getAbsolutePath()));
 	}
-
 
 	private static void checkIsFile(File f) throws NotAFileException {
 		if (!f.isFile())
 			throw new NotAFileException("Not a file: " + f.getAbsolutePath());
 	}
 
-	private static void checkFileNotExists(File f) throws FileAlreadyExistsException {
+	private static void checkFileNotExists(File f)
+			throws FileAlreadyExistsException {
 		if (f.exists()) {
-			throw new FileAlreadyExistsException(
-							"File already exists: " + f.getAbsolutePath());
+			throw new FileAlreadyExistsException("File already exists: "
+					+ f.getAbsolutePath());
 		}
 	}
 
 	private static void checkFileExists(File f) throws FileNotFoundException {
 		if (!f.exists())
-			throw new FileNotFoundException("File not found: " + f.getAbsolutePath());
+			throw new FileNotFoundException("File not found: "
+					+ f.getAbsolutePath());
 	}
 
-	private static void checkFileIsReadable(File f) throws NotAReadableFileException {
+	private static void checkFileIsReadable(File f)
+			throws NotAReadableFileException {
 		if (!f.exists()) {
 			throw new NotAFileException("Not a file: " + f);
 		}
