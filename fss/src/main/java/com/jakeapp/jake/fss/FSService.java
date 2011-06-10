@@ -494,22 +494,22 @@ public class FSService implements IFSService, IModificationListener {
 	}
 
 	@Deprecated
-	public String calculateHash(byte[] bytes) {
+	public HashValue calculateHash(byte[] bytes) {
 		return this.hasher.calculateHash(new ByteArrayInputStream(bytes));
 	}
 
-	public String calculateHash(InputStream stream) {
+	public HashValue calculateHash(InputStream stream) {
 		return this.hasher.calculateHash(stream);
 	}
 
-	public String calculateHashOverFile(String relpath)
+	public HashValue calculateHashOverFile(String relpath)
 			throws InvalidFilenameException, NotAReadableFileException,
 			FileNotFoundException {
 		return this.hasher.calculateHash(readFileStream(relpath));
 	}
 
 	public int getHashLength() {
-		return this.hasher.getHashLength();
+		return HashValue.getStringLength();
 	}
 
 	public long getLastModified(String relpath)

@@ -25,9 +25,12 @@ public class FSServiceTestCase extends FSTestCase {
 	}
 
 	@Override
-	//@Prerequisite(checker = DesktopSupportedChecker.class) - does not work
+	// @Prerequisite(checker = DesktopSupportedChecker.class) - does not work
 	public void setUp() throws Exception {
 		super.setUp();
+
+		HashValue.DIGEST = "SHA-512";
+		HashValue.N_BITS = 512;
 
 		if ((new DesktopSupportedChecker()).satisfy()) {
 			fss = new FSService();

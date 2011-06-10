@@ -27,7 +27,7 @@ public class FolderWatcher {
 
 	private HashMap<File, Long> lastmodifieddates = new HashMap<File, Long>();
 
-	private HashMap<File, String> hashes = new HashMap<File, String>();
+	private HashMap<File, HashValue> hashes = new HashMap<File, HashValue>();
 
 	private List<File> files = new ArrayList<File>();
 
@@ -126,7 +126,7 @@ public class FolderWatcher {
 				if (f.isFile()) {
 					if (files.contains(f)) {
 						if (f.lastModified() != lastmodifieddates.get(f)) {
-							String newhash = null;
+							HashValue newhash = null;
 							try {
 								newhash = calculateHash(f);
 							} catch (NotAReadableFileException e) {
@@ -146,7 +146,7 @@ public class FolderWatcher {
 							}
 						}
 					} else {
-						String newhash = null;
+						HashValue newhash = null;
 						try {
 							newhash = calculateHash(f);
 						} catch (NotAReadableFileException e) {
@@ -163,7 +163,7 @@ public class FolderWatcher {
 		}
 	}
 
-	private String calculateHash(File f) throws NotAReadableFileException {
+	private HashValue calculateHash(File f) throws NotAReadableFileException {
 		try {
 			return this.hasher.calculateHash(f);
 		} catch (FileNotFoundException e) {

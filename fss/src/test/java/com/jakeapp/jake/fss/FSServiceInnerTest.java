@@ -112,12 +112,14 @@ public class FSServiceInnerTest extends FSTestCase {
 	@Test
 	@Prerequisite(checker = DesktopSupportedChecker.class)
 	public void testHashLength() throws Exception {
-		Assert.assertEquals(fss.getHashLength(), 128);
+		Assert.assertEquals(fss.getHashLength(), HashValue.N_BITS / 4);
 	}
 
 	@Test
 	@Prerequisite(checker = DesktopSupportedChecker.class)
 	public void testHash() throws Exception {
+		HashValue.DIGEST = "SHA-512";
+		HashValue.N_BITS = 512;
 		Assert.assertEquals(
 				fss.calculateHash("foobar".getBytes()),
 				"0a50261ebd1a390fed2bf326f2673c145582a6342d523204973d0219337f81616a8069b012587cf5635f6925f1b56c360230c19b273500ee013e030601bf2425");
