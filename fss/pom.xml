@@ -4,87 +4,91 @@
 	<groupId>com.jakeapp.jake</groupId>
 	<artifactId>fss</artifactId>
 	<name>fss</name>
+	<version>1.3-SNAPSHOT</version>
 	<description>
 		A computer-independent view and addressing scheme of a common folder.
+
+		The fss, set up with a project directory folder, provides an interface to 
+		work with all the files within this folder, in a way that does not depend on
+		which path delimiters the OS uses.
+
+		All relevant operations such as 
+		writing, deleting, moving, hashing files are supported.
+
+		A special feature is watching for events on the folder, such as file creation,
+		deletion and modifications.
 	</description>
-	<version>1.3-SNAPSHOT</version>
-	<url>http://dev.jakeapp.com/projects/fss</url>
-	<scm>
-		<connection>scm:svn:svn://svn.jakeapp.com/trunk/fss</connection>
-		<developerConnection>scm:svn:svn://svn.jakeapp.com/trunk/fss</developerConnection>
-	</scm>
-    <developers>
-        <developer>
-            <id>johannes</id>
-            <name>Johannes Buchner</name>
-            <email>e0625457@student.tuwien.ac.at</email>
-            <roles>
-                <role>Developer</role>
-                <role>Maintainer</role>
-            </roles>
-        </developer>
-        <developer>
-            <id>chris</id>
-            <name>Christian Sutter</name>
-            <email>chris@doublesignal.com</email>
-            <roles>
-                <role>Bugfixing</role>
-            </roles>
-        </developer>
-        <developer>
-            <id>simon</id>
-            <name>Simon Wallner</name>
-            <email>contact@simonwallner.at</email>
-            <roles>
-                <role>Bugfixing</role>
-            </roles>
-        </developer>
-        <developer>
-            <id>peter</id>
-            <name>Peter Steinberger</name>
-            <email>peter.steinberger@student.tuwien.ac.at</email>
-            <roles>
-                <role>Bugfixing</role>
-            </roles>
-        </developer>
-        <developer>
-            <id>philipp</id>
-            <name>Philipp Knobelspies</name>
-            <email>philipp.knobelspies@googlemail.com</email>
-            <roles>
-                <role>Bugfixing</role>
-            </roles>
-        </developer>
-        <developer>
-            <id>christopher</id>
-            <name>Christopher Cerny</name>
-            <email>cerny.christopher@gmx.at</email>
-            <roles>
-                <role>Bugfixing</role>
-            </roles>
-        </developer>
-        <developer>
-            <id>dominik</id>
-            <name>Dominik Dorn</name>
-            <email>dominik@jakeapp.com</email>
-            <roles>
-                <role>Bugfixing</role>
-            </roles>
-        </developer>
-    </developers>
-    <repositories>
+	<licenses>
+		<license>
+			<name>GPL 3</name>
+			<url>http://www.gnu.org/licenses/gpl-3.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+	<developers>
+		<developer>
+			<id>johannes</id>
+			<name>Johannes Buchner</name>
+			<email>buchner.johannes@gmx.at</email>
+		</developer>
+		<developer>
+			<name>Christian Sutter</name>
+		</developer>
+		<developer>
+			<name>Simon Wallner</name>
+		</developer>
+		<developer>
+			<name>Peter Steinberger</name>
+		</developer>
+		<developer>
+			<name>Philipp Knobelspies</name>
+		</developer>
+		<developer>
+			<name>Christopher Cerny</name>
+		</developer>
+		<developer>
+			<name>Dominik Dorn</name>
+		</developer>
+	</developers>
+	<url>http://jakeapp.sourceforge.net/fss/</url>
+	<distributionManagement>
+		<site>
+			<id>sourceforge</id>
+			<url>scp://shell.sourceforge.net/home/project-web/jakeapp/htdocs/fss</url>
+		</site>
 		<repository>
-			<id>custom-repo</id>
-			<name>our own repo</name>
-			<url>http://maven.jakeapp.com/</url>
-			<layout>default</layout>
+			<id>sourceforge</id>
+			<name>SourceForge</name>
+			<url>sftp://frs.sourceforge.net:/home/frs/project/j/ja/jakeapp/releases
+			</url>
+		</repository>
+		<snapshotRepository>
+			<id>sourceforge</id>
+			<name>SourceForge</name>
+			<url>sftp://frs.sourceforge.net:/home/frs/project/j/ja/jakeapp/snapshots
+		</url>
+		</snapshotRepository>
+	</distributionManagement>
+	<scm>
+		<connection>scm:git:git://jakeapp.git.sourceforge.net/gitroot/jakeapp/fss/</connection>
+		<developerConnection>scm:git:ssh://johannesbuchner@jakeapp.git.sourceforge.net/gitroot/jakeapp/fss/</developerConnection>
+		<url>http://jakeapp.git.sourceforge.net/</url>
+	</scm>
+	<repositories>
+		<repository>
+			<id>jakeapp snapshots</id>
+			<url>https://sourceforge.net/projects/jakeapp/files/snapshots/</url>
+		</repository>
+		<repository>
+			<id>jakeapp releases</id>
+			<url>https://sourceforge.net/projects/jakeapp/files/releases/</url>
 		</repository>
 	</repositories>
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.4</version>
+			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -101,28 +105,42 @@
 		<dependency>
 			<groupId>com.jakeapp.jake</groupId>
 			<artifactId>fss-tests-base</artifactId>
-			<version>1.1</version>
+			<version>1.2-SNAPSHOT</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
 	<properties>
 		<log4j.version>1.2.14</log4j.version>
+		<junit.version>4.4</junit.version>
 	</properties>
-	<distributionManagement>
-		<repository>
-			<id>repo</id>
-			<url>scp://dev.jakeapp.com/var/www/jake/maven-reop/</url>
-		</repository>
-	</distributionManagement>
 	<build>
 		<plugins>
-
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.0.2</version>
 				<configuration>
 					<source>1.6</source>
 					<target>1.6</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-install-plugin</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>install</goal>
+						</goals>
+						<configuration>
+							<createChecksum>true</createChecksum>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<configuration>
+					<encoding>UTF-8</encoding>
 				</configuration>
 			</plugin>
 		</plugins>

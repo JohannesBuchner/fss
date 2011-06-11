@@ -4,7 +4,10 @@ import java.io.File;
 
 import junit.framework.Assert;
 
-
+/**
+ * A helper class that provides functions to create a temporary directory,
+ * and to recursively delete a directory.
+ */
 public abstract class FSTestCommons {
 
 	/**
