@@ -1,15 +1,17 @@
 package com.jakeapp.jake.fss;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import org.apache.log4j.Logger;
 
 import com.jakeapp.jake.fss.IModificationListener.ModifyActions;
 import com.jakeapp.jake.fss.exceptions.NotADirectoryException;
@@ -22,6 +24,7 @@ import com.jakeapp.jake.fss.exceptions.NotAReadableFileException;
  * @see IFSService
  */
 public class FolderWatcher {
+	private static final Logger log = Logger.getLogger(FolderWatcher.class);
 
 	private File rootpath;
 
@@ -31,7 +34,8 @@ public class FolderWatcher {
 
 	private List<File> files = new ArrayList<File>();
 
-	private List<IModificationListener> listeners = new ArrayList<IModificationListener>();
+	private Set<IModificationListener> listeners =
+		new HashSet<IModificationListener>();
 
 	private Timer timer;
 
@@ -42,7 +46,7 @@ public class FolderWatcher {
 	private StreamFileHashCalculator hasher = null;
 
 	public FolderWatcher(File rootpath, long pollingInterval)
-			throws NotADirectoryException, NoSuchAlgorithmException {
+		throws NotADirectoryException, NoSuchAlgorithmException {
 
 		if (!rootpath.exists() || !rootpath.isDirectory()) {
 			throw new NotADirectoryException();
@@ -66,11 +70,15 @@ public class FolderWatcher {
 	}
 
 	public void addListener(IModificationListener l) {
-		listeners.add(l);
+		synchronized (listeners) {
+			listeners.add(l);
+		}
 	}
 
 	public void removeListener(IModificationListener l) {
-		listeners.remove(l);
+		synchronized (listeners) {
+			listeners.remove(l);
+		}
 	}
 
 	public void cancel() {
@@ -87,8 +95,10 @@ public class FolderWatcher {
 		@Override
 		public void run() {
 			if (!rootpath.isDirectory()) {
+				System.err.println("Bug: FolderScanTask was not shutdown, doing "
+					+ "it myself.");
 				System.err.println("FolderScanTask was not shutdown, doing "
-						+ "it myself.");
+					+ "it myself.");
 				cancel();
 				return;
 			}
@@ -119,18 +129,24 @@ public class FolderWatcher {
 			if (isCanceled)
 				return;
 			Iterable<File> fl = FileUtils.listFilesMinusA(folder);
+			if (log.isDebugEnabled())
+				log.debug("got folder list for " + folder);
 			for (File f : fl) {
 				if (f.isDirectory()) {
 					checkFolder(f);
 				}
 				if (f.isFile()) {
+					if (log.isDebugEnabled())
+						log.debug("file : " + f);
 					if (files.contains(f)) {
 						if (f.lastModified() != lastmodifieddates.get(f)) {
 							HashValue newhash = null;
 							try {
 								newhash = calculateHash(f);
 							} catch (NotAReadableFileException e) {
-								e.printStackTrace();
+								if (log.isDebugEnabled())
+									log.debug("couldn't calculate hash for "
+										+ f, e);
 								continue;
 							}
 
@@ -139,17 +155,24 @@ public class FolderWatcher {
 								hashes.put(f, newhash);
 								changeHappened(f, ModifyActions.MODIFIED);
 							} else {
-								/*
-								 * System.out.println("Got modification update, "
-								 * + "but hash stayed the same.");
-								 */
+								if (log.isDebugEnabled())
+									log.debug("file : " + f
+										+ " hasn't changed (by hash)");
 							}
+						} else {
+							if (log.isDebugEnabled())
+								log.debug("file : " + f
+									+ " hasn't changed (by date)");
 						}
 					} else {
 						HashValue newhash = null;
 						try {
 							newhash = calculateHash(f);
 						} catch (NotAReadableFileException e) {
+							if (log.isDebugEnabled())
+								log.debug(
+									"couldn't calculate hash for new file " + f,
+									e);
 						}
 
 						lastmodifieddates.put(f, f.lastModified());
@@ -174,8 +197,12 @@ public class FolderWatcher {
 	private void changeHappened(File f, ModifyActions event) {
 		if (isCanceled)
 			return;
-		for (IModificationListener l : listeners) {
-			l.fileModified(f, event);
+		if (log.isDebugEnabled())
+			log.debug("event " + event + " on file " + f);
+		synchronized (listeners) {
+			for (IModificationListener l : listeners) {
+				l.fileModified(f, event);
+			}
 		}
 	}
 }

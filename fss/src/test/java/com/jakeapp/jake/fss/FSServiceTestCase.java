@@ -21,11 +21,14 @@ public class FSServiceTestCase extends FSTestCase {
 		Assert.assertTrue(f.exists() && f.isDirectory());
 		Assert.assertTrue(recursiveDelete(f));
 		f.mkdirs();
-		Assert.assertTrue(f.exists() && f.isDirectory() && f.list().length == 0);
+		Assert
+			.assertTrue(f.exists() && f.isDirectory() && f.list().length == 0);
 	}
 
 	@Override
-	// @Prerequisite(checker = DesktopSupportedChecker.class) - does not work
+	/*
+	 * @Prerequisite(checker = DesktopSupportedChecker.class) - does not work
+	 */
 	public void setUp() throws Exception {
 		super.setUp();
 
@@ -37,5 +40,11 @@ public class FSServiceTestCase extends FSTestCase {
 			fss.setRootPath(new ProjectDir(mytempdir));
 			Assert.assertEquals("rootpath", mytempdir, fss.getRootPath());
 		}
+	}
+	
+	@Override
+	public void tearDown() throws Exception {
+		fss.unsetRootPath();
+		super.tearDown();
 	}
 }

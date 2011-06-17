@@ -62,12 +62,6 @@
 			<url>sftp://frs.sourceforge.net:/home/frs/project/j/ja/jakeapp/releases
 			</url>
 		</repository>
-		<snapshotRepository>
-			<id>sourceforge</id>
-			<name>SourceForge</name>
-			<url>sftp://frs.sourceforge.net:/home/frs/project/j/ja/jakeapp/snapshots
-		</url>
-		</snapshotRepository>
 	</distributionManagement>
 	<scm>
 		<connection>scm:git:git://jakeapp.git.sourceforge.net/gitroot/jakeapp/fss/</connection>
@@ -76,12 +70,8 @@
 	</scm>
 	<repositories>
 		<repository>
-			<id>jakeapp snapshots</id>
-			<url>https://sourceforge.net/projects/jakeapp/files/snapshots/</url>
-		</repository>
-		<repository>
 			<id>jakeapp releases</id>
-			<url>https://sourceforge.net/projects/jakeapp/files/releases/</url>
+			<url>http://jakeapp.sourceforge.net/proxy.php?r=</url>
 		</repository>
 	</repositories>
 	<dependencies>
@@ -145,4 +135,13 @@
 			</plugin>
 		</plugins>
 	</build>
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>cobertura-maven-plugin</artifactId>
+				<version>2.4</version>
+			</plugin>
+		</plugins>
+	</reporting>
 </project>

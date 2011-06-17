@@ -29,7 +29,7 @@ import java.util.List;
  * @author johannes
  */
 
-public interface IFSService extends Serializable {
+public interface IFSService {
 	/**
 	 * Checks that the file exists and that it is a regular file (no link,
 	 * device, pipe, ...)
