@@ -30,6 +30,7 @@ import java.util.List;
  */
 
 public interface IFSService {
+
 	/**
 	 * Checks that the file exists and that it is a regular file (no link,
 	 * device, pipe, ...)
@@ -43,7 +44,7 @@ public interface IFSService {
 	 *             if an I/O Error occured
 	 */
 	public Boolean fileExists(String relativePath)
-		throws InvalidFilenameException;
+			throws InvalidFilenameException;
 
 	/**
 	 * Checks that the folder exists and that it is a folder
@@ -57,7 +58,7 @@ public interface IFSService {
 	 *             if an I/O Error occured
 	 */
 	public Boolean folderExists(String relativePath)
-		throws InvalidFilenameException, IOException;
+			throws InvalidFilenameException, IOException;
 
 	/**
 	 * Joins the rootpath with the relativePath. The absolute filename is
@@ -69,7 +70,7 @@ public interface IFSService {
 	 * @throws InvalidFilenameException
 	 */
 	public String getFullpath(String relativePath)
-		throws InvalidFilenameException;
+			throws InvalidFilenameException;
 
 	/**
 	 * @return the rootpath set previously by <code>setRootPath</code> if no
@@ -116,7 +117,7 @@ public interface IFSService {
 	 *             if an I/O Error occured
 	 */
 	public void launchFile(String relativePath)
-		throws InvalidFilenameException, LaunchException, IOException;
+			throws InvalidFilenameException, LaunchException, IOException;
 
 	/**
 	 * Lists folder content following isValidRelpath
@@ -131,7 +132,7 @@ public interface IFSService {
 	 *             if an I/O Error occured
 	 */
 	public List<String> listFolder(String relativePath)
-		throws InvalidFilenameException, IOException;
+			throws InvalidFilenameException, IOException;
 
 	/**
 	 * Lists all files in rootpath following isValidRelpath
@@ -160,8 +161,8 @@ public interface IFSService {
 	 */
 	@Deprecated
 	public byte[] readFile(String relativePath)
-		throws InvalidFilenameException, FileNotFoundException,
-		NotAReadableFileException;
+			throws InvalidFilenameException, FileNotFoundException,
+			NotAReadableFileException;
 
 	/**
 	 * Gives access to the content of a given file
@@ -179,8 +180,8 @@ public interface IFSService {
 	 *             if the relativePath isn't a file
 	 */
 	public InputStream readFileStream(String relativePath)
-		throws InvalidFilenameException, FileNotFoundException,
-		NotAReadableFileException;
+			throws InvalidFilenameException, FileNotFoundException,
+			NotAReadableFileException;
 
 	/**
 	 * Sets and stores the root path for operations that use a relativePath.
@@ -193,7 +194,7 @@ public interface IFSService {
 	 *             if the path is not a folder
 	 */
 	public void setRootPath(ProjectDir dir) throws IOException,
-		NotADirectoryException;
+			NotADirectoryException;
 
 	/**
 	 * Unsets the root path (e.g. stops listeners)
@@ -226,8 +227,9 @@ public interface IFSService {
 	 */
 	@Deprecated
 	public void writeFile(String relativePath, byte[] content)
-		throws InvalidFilenameException, IOException, FileTooLargeException,
-		NotAFileException, CreatingSubDirectoriesFailedException;
+			throws InvalidFilenameException, IOException,
+			FileTooLargeException, NotAFileException,
+			CreatingSubDirectoriesFailedException;
 
 	/**
 	 * Writes the content to the file. Creates subdirectories, if needed.
@@ -248,8 +250,9 @@ public interface IFSService {
 	 *             if jake couldn't create subdirectories
 	 */
 	public void writeFileStream(String relativePath, InputStream stream)
-		throws InvalidFilenameException, IOException, FileTooLargeException,
-		NotAFileException, CreatingSubDirectoriesFailedException;
+			throws InvalidFilenameException, IOException,
+			FileTooLargeException, NotAFileException,
+			CreatingSubDirectoriesFailedException;
 
 	/**
 	 * Gets the operating system preferred temporary directory It is deleted
@@ -286,8 +289,8 @@ public interface IFSService {
 	 *             if the relativePath is not a file
 	 */
 	public boolean deleteFile(String relativePath)
-		throws InvalidFilenameException, FileNotFoundException,
-		NotAFileException;
+			throws InvalidFilenameException, FileNotFoundException,
+			NotAFileException;
 
 	/**
 	 * Deletes the folder, recursively
@@ -305,8 +308,8 @@ public interface IFSService {
 	 */
 	// TODO: unit tests!
 	public boolean deleteFolder(String relativePath)
-		throws InvalidFilenameException, FileNotFoundException,
-		NotADirectoryException;
+			throws InvalidFilenameException, FileNotFoundException,
+			NotADirectoryException;
 
 	/**
 	 * Deletes the file and removes parent folders if they are empty by moving
@@ -321,7 +324,7 @@ public interface IFSService {
 	 *             if no file is found at this relativePath
 	 */
 	public boolean trashFile(String relativePath)
-		throws InvalidFilenameException, FileNotFoundException;
+			throws InvalidFilenameException, FileNotFoundException;
 
 	/**
 	 * Trashes a folder with all its files/folders in it.
@@ -336,7 +339,7 @@ public interface IFSService {
 	 */
 	// TODO: unit tests!
 	boolean trashFolder(String relativePath) throws InvalidFilenameException,
-		FileNotFoundException;
+			FileNotFoundException;
 
 	/**
 	 * Copy file
@@ -352,9 +355,9 @@ public interface IFSService {
 	 */
 	// FIXME: need tests for that?
 	public boolean copyFile(String from, String to)
-		throws InvalidFilenameException, NotAReadableFileException,
-		FileAlreadyExistsException, IOException,
-		CreatingSubDirectoriesFailedException;
+			throws InvalidFilenameException, NotAReadableFileException,
+			FileAlreadyExistsException, IOException,
+			CreatingSubDirectoriesFailedException;
 
 	/**
 	 * @param from
@@ -377,9 +380,9 @@ public interface IFSService {
 	 *             after the move operation, failed.
 	 */
 	public boolean moveFile(String from, String to)
-		throws InvalidFilenameException, NotAReadableFileException,
-		FileAlreadyExistsException, IOException,
-		CreatingSubDirectoriesFailedException;
+			throws InvalidFilenameException, NotAReadableFileException,
+			FileAlreadyExistsException, IOException,
+			CreatingSubDirectoriesFailedException;
 
 	/**
 	 * @param relativePath
@@ -394,8 +397,8 @@ public interface IFSService {
 	 *             if no file is found at this relativePath
 	 */
 	HashValue calculateHashOverFile(String relativePath)
-		throws InvalidFilenameException, NotAReadableFileException,
-		FileNotFoundException;
+			throws InvalidFilenameException, NotAReadableFileException,
+			FileNotFoundException;
 
 	/**
 	 * @param bytes
@@ -429,7 +432,7 @@ public interface IFSService {
 	 *             if the relativePath isn't a file
 	 */
 	long getFileSize(String relativePath) throws InvalidFilenameException,
-		FileNotFoundException, NotAFileException;
+			FileNotFoundException, NotAFileException;
 
 	/**
 	 * Registers a callback for watching the rootpath. Events are create,
@@ -443,7 +446,7 @@ public interface IFSService {
 	 * @see IFileModificationListener
 	 */
 	public void addModificationListener(
-		IFileModificationListener fileModificationListener);
+			IFileModificationListener fileModificationListener);
 
 	/**
 	 * Removes a callback for watching the rootpath.
@@ -454,7 +457,7 @@ public interface IFSService {
 	 * @see IFileModificationListener
 	 */
 	public void removeModificationListener(
-		IFileModificationListener fileModificationListener);
+			IFileModificationListener fileModificationListener);
 
 	/**
 	 * get the last modified date for a file
@@ -468,7 +471,7 @@ public interface IFSService {
 	 *             if the relativePath is not a file
 	 */
 	public long getLastModified(String relativePath)
-		throws InvalidFilenameException, NotAFileException;
+			throws InvalidFilenameException, NotAFileException;
 
 	/**
 	 * Extracts the file/foldername from a relpath.
@@ -491,7 +494,7 @@ public interface IFSService {
 	 *             if the folder cannot be created
 	 */
 	void createFolder(String relpath) throws InvalidFilenameException,
-		IOException;
+			IOException;
 
 	/**
 	 * Imports a File into the project.
@@ -500,6 +503,6 @@ public interface IFSService {
 	 * @param destFolderRelPath
 	 */
 	void importFile(File file, String destFolderRelPath) throws IOException,
-		InvalidFilenameException, NotAReadableFileException,
-		FileAlreadyExistsException, CreatingSubDirectoriesFailedException;
+			InvalidFilenameException, NotAReadableFileException,
+			FileAlreadyExistsException, CreatingSubDirectoriesFailedException;
 }

@@ -5,13 +5,14 @@ import java.io.File;
 import junit.framework.Assert;
 
 /**
- * A helper class that provides functions to create a temporary directory,
- * and to recursively delete a directory.
+ * A helper class that provides functions to create a temporary directory, and
+ * to recursively delete a directory.
  */
 public abstract class FSTestCommons {
 
 	/**
 	 * gets a new temporary directory available for tests
+	 * 
 	 * @return
 	 */
 	public static File provideTempDir() {
@@ -65,6 +66,7 @@ public abstract class FSTestCommons {
 		clean();
 		return ret;
 	}
+
 	private static boolean _recursiveDelete(File folder) {
 		clean(); /* windows needs this */
 		if (folder.isFile()) {
@@ -74,8 +76,8 @@ public abstract class FSTestCommons {
 			if (l != null) {
 				for (String aL : l) {
 					if (recursiveDelete(new File(folder.getPath(), aL)) == false) {
-						System.err.println(
-										"deleting " + aL + " in " + folder.getPath() + " failed!");
+						System.err.println("deleting " + aL + " in "
+								+ folder.getPath() + " failed!");
 						return false;
 					}
 				}

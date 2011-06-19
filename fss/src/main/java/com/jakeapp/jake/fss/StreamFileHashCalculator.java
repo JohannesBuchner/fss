@@ -10,6 +10,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public class StreamFileHashCalculator {
+
 	private MessageDigest md;
 
 	public StreamFileHashCalculator() throws NoSuchAlgorithmException {
@@ -24,8 +25,7 @@ public class StreamFileHashCalculator {
 		DigestInputStream dis = new DigestInputStream(is, md);
 		byte[] tmp = new byte[1024];
 		try {
-			while (dis.read(tmp) >= 0)
-				;
+			while (dis.read(tmp) >= 0);
 			dis.close();
 		} catch (IOException e) {
 			return null;

@@ -11,8 +11,8 @@ import org.junit.Ignore;
 import com.jakeapp.jake.test.FSTestCommons;
 
 /**
- * A unit test base class that provides a temporary directory,
- * which is created empty on start, and is deleted safely afterwords.
+ * A unit test base class that provides a temporary directory, which is created
+ * empty on start, and is deleted safely afterwords.
  */
 @Ignore
 public abstract class TmpdirEnabledTestCase {

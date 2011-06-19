@@ -148,8 +148,8 @@ public class FolderWatchTest extends FSTestCase {
 			IModificationListener failer = new IModificationListener() {
 
 				public void fileModified(File f, ModifyActions action) {
-					Assert.fail("Got unwanted event: " + f.getAbsolutePath() + ":"
-							+ action);
+					Assert.fail("Got unwanted event: " + f.getAbsolutePath()
+							+ ":" + action);
 				}
 			};
 			fw.addListener(failer);
@@ -167,7 +167,8 @@ public class FolderWatchTest extends FSTestCase {
 			fw.addListener(new IModificationListener() {
 
 				public void fileModified(File f, ModifyActions action) {
-					log.debug("got event: " + f.getAbsolutePath() + ":" + action);
+					log.debug("got event: " + f.getAbsolutePath() + ":"
+							+ action);
 					Assert.assertEquals("just_edited", f.getName());
 					Assert.assertEquals(ModifyActions.MODIFIED, action);
 					s.release();
@@ -179,8 +180,8 @@ public class FolderWatchTest extends FSTestCase {
 			log.debug("We expect no event.");
 
 			writeInFile(f, "bar, baz");
-			Assert.assertTrue("Real content change", s.tryAcquire(interval * 3,
-					TimeUnit.MILLISECONDS));
+			Assert.assertTrue("Real content change",
+					s.tryAcquire(interval * 3, TimeUnit.MILLISECONDS));
 
 			fw.cancel();
 			f.delete();

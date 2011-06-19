@@ -21,8 +21,7 @@ public class FSServiceTestCase extends FSTestCase {
 		Assert.assertTrue(f.exists() && f.isDirectory());
 		Assert.assertTrue(recursiveDelete(f));
 		f.mkdirs();
-		Assert
-			.assertTrue(f.exists() && f.isDirectory() && f.list().length == 0);
+		Assert.assertTrue(f.exists() && f.isDirectory() && f.list().length == 0);
 	}
 
 	@Override
@@ -41,7 +40,7 @@ public class FSServiceTestCase extends FSTestCase {
 			Assert.assertEquals("rootpath", mytempdir, fss.getRootPath());
 		}
 	}
-	
+
 	@Override
 	public void tearDown() throws Exception {
 		fss.unsetRootPath();

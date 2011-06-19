@@ -25,9 +25,7 @@ public class RunStreamFileHashCalculator {
 		for (File f : folder.listFiles()) {
 			if (f.isFile()) {
 				try {
-					log
-							.info(f.getAbsolutePath() + " - "
-									+ fhc.calculateHash(f));
+					log.info(f.getAbsolutePath() + " - " + fhc.calculateHash(f));
 				} catch (FileNotFoundException e) {
 					e.printStackTrace();
 				}

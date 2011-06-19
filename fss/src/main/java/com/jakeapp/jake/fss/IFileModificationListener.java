@@ -9,5 +9,6 @@ import com.jakeapp.jake.fss.IModificationListener.ModifyActions;
  */
 
 public interface IFileModificationListener {
+
 	void fileModified(String relpath, ModifyActions action);
 }

@@ -15,6 +15,7 @@ import com.jakeapp.jake.fss.exceptions.NotADirectoryException;
 
 @RunWith(PrerequisiteAwareClassRunner.class)
 public class FSServiceInnerTest extends FSTestCase {
+
 	FSService fss = null;
 
 	@Test

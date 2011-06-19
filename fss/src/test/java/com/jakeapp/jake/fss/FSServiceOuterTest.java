@@ -29,8 +29,9 @@ import com.jakeapp.jake.fss.exceptions.NotAReadableFileException;
 
 @RunWith(PrerequisiteAwareClassRunner.class)
 public class FSServiceOuterTest extends FSServiceTestCase {
+
 	private static final Logger log = Logger
-		.getLogger(FSServiceOuterTest.class);
+			.getLogger(FSServiceOuterTest.class);
 
 	@Override
 	public void setUp() throws Exception {
@@ -45,17 +46,17 @@ public class FSServiceOuterTest extends FSServiceTestCase {
 		File root = mytempdir;
 
 		Assert.assertEquals("root", root.getAbsolutePath(),
-			fss.getFullpath("/"));
+				fss.getFullpath("/"));
 		Assert.assertEquals(fss.getFullpath("testfile.xml"), root + sep
-			+ "testfile.xml");
+				+ "testfile.xml");
 		Assert.assertEquals(fss.getFullpath("folder/to/testfile.xml"), root
-			+ sep + "folder" + sep + "to" + sep + "testfile.xml");
+				+ sep + "folder" + sep + "to" + sep + "testfile.xml");
 
 		Assert.assertEquals(fss.joinPath("foldera", "folderb"), "foldera" + sep
-			+ "folderb");
+				+ "folderb");
 		Assert.assertEquals(
-			fss.joinPath("foldera" + sep + "to" + sep, "folderb"), "foldera"
-				+ sep + "to" + sep + "folderb");
+				fss.joinPath("foldera" + sep + "to" + sep, "folderb"),
+				"foldera" + sep + "to" + sep + "folderb");
 
 	}
 
@@ -95,8 +96,7 @@ public class FSServiceOuterTest extends FSServiceTestCase {
 		String filename = "/test.out";
 		String content = "This is interesting\nstuff\n\nyou know...\n\n";
 		{
-			FileWriter w =
-				new FileWriter(mytempdir + File.separator + filename);
+			FileWriter w = new FileWriter(mytempdir + File.separator + filename);
 			BufferedWriter bw = new BufferedWriter(w);
 			bw.write(content);
 			bw.close();
@@ -104,28 +104,27 @@ public class FSServiceOuterTest extends FSServiceTestCase {
 
 			byte[] r = fss.readFile(filename);
 			Assert.assertEquals("content read correctly", new String(r),
-				content);
+					content);
 		}
 		{
-			byte[] c =
-				{ 32, 12, 61, 72, 245 - 256, 11, 100, 0, 23, 1, 4, 21,
+			byte[] c = { 32, 12, 61, 72, 245 - 256, 11, 100, 0, 23, 1, 4, 21,
 					254 - 256, 21, 1, 2 };
 
-			FileOutputStream bw =
-				new FileOutputStream(mytempdir + File.separator + filename);
+			FileOutputStream bw = new FileOutputStream(mytempdir
+					+ File.separator + filename);
 			bw.write(c);
 			bw.close();
 
 			byte[] r = fss.readFile(filename);
 			Assert.assertEquals("content read correctly", new String(r),
-				new String(c));
+					new String(c));
 			Assert.assertEquals("content read correctly", r.length, c.length);
 		}
 		{
 			boolean setupWorked = true;
 			try {
 				Runtime.getRuntime().exec(
-					"chmod 000 " + mytempdir + File.separator + filename);
+						"chmod 000 " + mytempdir + File.separator + filename);
 				Thread.sleep(100);
 			} catch (Exception e) {
 				setupWorked = false;
@@ -147,8 +146,7 @@ public class FSServiceOuterTest extends FSServiceTestCase {
 		Assert.assertFalse(fss.folderExists("/folderDoesNotExist"));
 		String[] dirnames = { "foobar", "/foo/bar/", "ran/dom/stuff" };
 		for (String dirname : dirnames) {
-			File f =
-				new File(fss.getRootPath() + File.separator + dirname
+			File f = new File(fss.getRootPath() + File.separator + dirname
 					+ File.separator);
 			f.mkdirs();
 			Assert.assertTrue(fss.folderExists(dirname));
@@ -172,8 +170,7 @@ public class FSServiceOuterTest extends FSServiceTestCase {
 
 		String[] dirnames = { "foobar", "/foo/bar", "ran/dom/stuff" };
 		for (String dirname : dirnames) {
-			File f =
-				new File(fss.getRootPath() + File.separator + dirname
+			File f = new File(fss.getRootPath() + File.separator + dirname
 					+ File.separator);
 			f.getParentFile().mkdirs();
 			f.createNewFile();
@@ -218,10 +215,10 @@ public class FSServiceOuterTest extends FSServiceTestCase {
 			Assert.assertTrue(found);
 			if (j < 4) {
 				Assert.assertTrue("folder: " + content[j],
-					fss.folderExists(folder + sep + content[j]));
+						fss.folderExists(folder + sep + content[j]));
 			} else {
 				Assert.assertTrue("file: " + content[j],
-					fss.fileExists(folder + sep + content[j]));
+						fss.fileExists(folder + sep + content[j]));
 			}
 		}
 
@@ -229,10 +226,9 @@ public class FSServiceOuterTest extends FSServiceTestCase {
 	}
 
 	private void createFiles(String folder, String[] content)
-		throws IOException {
+			throws IOException {
 		for (int i = 0; i < content.length; i++) {
-			File f =
-				new File(fss.getRootPath() + File.separator + folder
+			File f = new File(fss.getRootPath() + File.separator + folder
 					+ File.separator + content[i]);
 			if (i < 4) {
 				f.mkdirs();
@@ -272,7 +268,7 @@ public class FSServiceOuterTest extends FSServiceTestCase {
 			public void fileModified(String relpath, ModifyActions action) {
 				log.debug(relpath + " " + action);
 				if (relpath.equals(file)
-					&& action.equals(ModifyActions.CREATED))
+						&& action.equals(ModifyActions.CREATED))
 					s.release();
 				else
 					throw new IllegalStateException("unexpected call");
@@ -283,9 +279,8 @@ public class FSServiceOuterTest extends FSServiceTestCase {
 		fos.write("foo".getBytes());
 		fos.close();
 		s.acquire();
-		//Assert.assertTrue(s.tryAcquire(5, TimeUnit.SECONDS));
-		Assert
-			.assertEquals(
+		// Assert.assertTrue(s.tryAcquire(5, TimeUnit.SECONDS));
+		Assert.assertEquals(
 				fss.calculateHashOverFile(file).toString(),
 				"f7fbba6e0636f890e56fbbf3283e524c6fa3204ae298382d624741d0dc6638326e282c41be5e4254d8820772c5518a2c5a8c0c7f7eda19594a7eb539453e1ed7");
 		fss.removeModificationListener(l);
@@ -298,7 +293,7 @@ public class FSServiceOuterTest extends FSServiceTestCase {
 			public void fileModified(String relpath, ModifyActions action) {
 				log.debug(relpath + " " + action);
 				if (relpath.equals(file)
-					&& action.equals(ModifyActions.MODIFIED))
+						&& action.equals(ModifyActions.MODIFIED))
 					s.release();
 				else
 					throw new IllegalStateException("unexpected call");
@@ -311,8 +306,7 @@ public class FSServiceOuterTest extends FSServiceTestCase {
 		s.acquire();
 		// Assert.assertTrue(s.tryAcquire(3, TimeUnit.SECONDS));
 		fss.removeModificationListener(l);
-		Assert
-			.assertEquals(
+		Assert.assertEquals(
 				fss.calculateHashOverFile(file).toString(),
 				"0a50261ebd1a390fed2bf326f2673c145582a6342d523204973d0219337f81616a8069b012587cf5635f6925f1b56c360230c19b273500ee013e030601bf2425");
 
@@ -323,7 +317,7 @@ public class FSServiceOuterTest extends FSServiceTestCase {
 			public void fileModified(String relpath, ModifyActions action) {
 				log.debug(relpath + " " + action);
 				if (relpath.equals(file)
-					&& action.equals(ModifyActions.DELETED))
+						&& action.equals(ModifyActions.DELETED))
 					s.release();
 				else
 					throw new IllegalStateException("unexpected call");
@@ -341,15 +335,13 @@ public class FSServiceOuterTest extends FSServiceTestCase {
 		wipeRoot();
 		recursiveDelete(fss.getRootPath());
 
-		String[] content =
-			{ "B", "C", "B/foo", "D", "F", "G", "H", "J", "B/foo/bar", "C/foo" };
+		String[] content = { "B", "C", "B/foo", "D", "F", "G", "H", "J",
+				"B/foo/bar", "C/foo" };
 		createFiles("", content);
 		Assert.assertFalse(fss.recursiveListFiles().isEmpty());
-		Assert
-			.assertEquals(fss.recursiveListFiles().size(), content.length - 4);
+		Assert.assertEquals(fss.recursiveListFiles().size(), content.length - 4);
 		Assert.assertTrue(fss.deleteFolder("B"));
-		Assert
-			.assertEquals(fss.recursiveListFiles().size(), content.length - 5);
+		Assert.assertEquals(fss.recursiveListFiles().size(), content.length - 5);
 		Assert.assertTrue(fss.deleteFolder("/"));
 		Assert.assertTrue(fss.recursiveListFiles().isEmpty());
 	}
@@ -360,8 +352,8 @@ public class FSServiceOuterTest extends FSServiceTestCase {
 		wipeRoot();
 		recursiveDelete(fss.getRootPath());
 
-		String[] content =
-			{ "B", "C", "B/foo", "D", "F", "G", "H", "J", "B/foo/bar", "C/foo" };
+		String[] content = { "B", "C", "B/foo", "D", "F", "G", "H", "J",
+				"B/foo/bar", "C/foo" };
 		createFiles("", content);
 
 		List<String> s = fss.recursiveListFiles();
@@ -376,11 +368,11 @@ public class FSServiceOuterTest extends FSServiceTestCase {
 			}
 			if (j < 4) {
 				Assert.assertFalse("We don't expect directory " + content[j],
-					found);
+						found);
 			} else {
 				Assert.assertTrue(found);
 				Assert.assertTrue("file: " + content[j],
-					fss.fileExists(content[j]));
+						fss.fileExists(content[j]));
 			}
 		}
 
@@ -403,10 +395,10 @@ public class FSServiceOuterTest extends FSServiceTestCase {
 		fos.close();
 		source.deleteOnExit();
 		fss.importFile(sourcedir, "/");
-		Assert
-			.assertEquals(
+		Assert.assertEquals(
 				fss.calculateHashOverFile(
-					sourcedir.getName() + "/" + source.getName()).toString(),
+						sourcedir.getName() + "/" + source.getName())
+						.toString(),
 				"0a50261ebd1a390fed2bf326f2673c145582a6342d523204973d0219337f81616a8069b012587cf5635f6925f1b56c360230c19b273500ee013e030601bf2425");
 		Assert.assertTrue(source.delete());
 		Assert.assertTrue(sourcedir.delete());
@@ -419,8 +411,8 @@ public class FSServiceOuterTest extends FSServiceTestCase {
 		String text = "foobar";
 		long before = System.currentTimeMillis();
 		Assert.assertFalse(fss.fileExists("source"));
-		FileOutputStream fos =
-			new FileOutputStream(new File(fss.getRootPath(), "source"));
+		FileOutputStream fos = new FileOutputStream(new File(fss.getRootPath(),
+				"source"));
 		fos.write(text.getBytes());
 		fos.close();
 
@@ -434,17 +426,16 @@ public class FSServiceOuterTest extends FSServiceTestCase {
 		Assert.assertTrue(fss.copyFile("bar/intermediate/baz", "foo/target"));
 		Assert.assertTrue(fss.fileExists("bar/intermediate/baz"));
 		Assert.assertTrue(fss.fileExists("foo/target"));
-		LineNumberReader fis =
-			new LineNumberReader(new FileReader(new File(fss.getRootPath(),
-				"foo/target")));
+		LineNumberReader fis = new LineNumberReader(new FileReader(new File(
+				fss.getRootPath(), "foo/target")));
 		Assert.assertEquals(fis.readLine(), text);
 
 		long after = System.currentTimeMillis();
 		long actual = fss.getLastModified("foo/target");
 		Assert.assertTrue("actual modification time " + actual
-			+ " should be >= before " + before, actual >= before - 10000);
+				+ " should be >= before " + before, actual >= before - 10000);
 		Assert.assertTrue("actual modification time " + actual
-			+ " should be <= after" + after, actual <= after + 10000);
+				+ " should be <= after" + after, actual <= after + 10000);
 
 		Assert.assertEquals(fss.getFileName("bar/intermediate/baz"), "baz");
 	}
@@ -475,14 +466,13 @@ public class FSServiceOuterTest extends FSServiceTestCase {
 			Assert.assertEquals(new String(fss.readFile("random")), content);
 		}
 		{
-			String content =
-				"Foo\u00c3\u00a4\u00c3\u00b6p\u00c3\u00a4\u00c3\u00bc\u00c3\u00b6 "
+			String content = "Foo\u00c3\u00a4\u00c3\u00b6p\u00c3\u00a4\u00c3\u00bc\u00c3\u00b6 "
 					+ "bar\nbau\u00e2\u0082\u00ac@\u00c4\u00b1\u00ce\u00b4\u00c3\u00be\u00c3"
 					+ "\u00a6'\u00c5\u0093\u00c5\u0093\u00c3\u00a6'\u00c5\u0093\u00c3\u00b8"
 					+ "\u00e2\u0082\u00ac@\u00c4\u00b1z";
 			fss.writeFile("random", content.getBytes("utf8"));
 			Assert.assertEquals(new String(fss.readFile("random"), "utf8"),
-				content);
+					content);
 		}
 		fss.writeFile("foo", new byte[] { 12 });
 		try {
@@ -494,11 +484,11 @@ public class FSServiceOuterTest extends FSServiceTestCase {
 		{
 			fss.writeFile("bar/baz/random", "Foobar".getBytes());
 			Assert.assertTrue("recursice create", fss.folderExists("bar")
-				&& fss.folderExists("bar/baz"));
+					&& fss.folderExists("bar/baz"));
 			Assert.assertTrue("recursice create",
-				fss.fileExists("bar/baz/random"));
+					fss.fileExists("bar/baz/random"));
 			Assert.assertEquals("recursice create", "Foobar",
-				new String(fss.readFile("bar/baz/random")));
+					new String(fss.readFile("bar/baz/random")));
 		}
 
 	}
@@ -509,17 +499,17 @@ public class FSServiceOuterTest extends FSServiceTestCase {
 		wipeRoot();
 		{
 			Assert.assertFalse(fss.fileExists("bar/baz/random")
-				&& fss.folderExists("bar/baz") && fss.folderExists("bar"));
+					&& fss.folderExists("bar/baz") && fss.folderExists("bar"));
 
 			fss.writeFile("bar/baz/random", "Foobar".getBytes());
 
 			Assert.assertTrue(fss.fileExists("bar/baz/random")
-				&& fss.folderExists("bar/baz") && fss.folderExists("bar"));
+					&& fss.folderExists("bar/baz") && fss.folderExists("bar"));
 
 			Assert.assertTrue(fss.deleteFile("bar/baz/random"));
 
 			Assert.assertFalse(fss.fileExists("bar/baz/random")
-				&& fss.folderExists("bar/baz") && fss.folderExists("bar"));
+					&& fss.folderExists("bar/baz") && fss.folderExists("bar"));
 		}
 		wipeRoot();
 		{
@@ -539,7 +529,7 @@ public class FSServiceOuterTest extends FSServiceTestCase {
 			Assert.assertTrue(fss.deleteFile("bar/baz/random"));
 			Assert.assertFalse(fss.fileExists("bar/baz/random"));
 			Assert.assertTrue(fss.folderExists("bar/baz")
-				&& fss.folderExists("bar"));
+					&& fss.folderExists("bar"));
 			Assert.assertTrue(fss.fileExists("bar/baz/random2"));
 		}
 	}
@@ -572,8 +562,7 @@ public class FSServiceOuterTest extends FSServiceTestCase {
 	public void testHashFile() throws Exception {
 		fss.writeFile("bar/baz/random", "Foobar".getBytes());
 
-		Assert
-			.assertEquals(
+		Assert.assertEquals(
 				fss.calculateHashOverFile("bar/baz/random"),
 				"cead1f59a9a0d22e46a28f943a662338dd758d6dce38f7ea6ab13b6615c312b69fffff049781c169b597577cb5566d5d1354364ac032a9d4d5bd8ef833340061");
 
@@ -590,7 +579,7 @@ public class FSServiceOuterTest extends FSServiceTestCase {
 	public void launchTest() throws Exception {
 		fss.writeFile("launch1.txt", "Foobar".getBytes());
 		fss.writeFile("launch2.html",
-			"<html><body><h1>Woot!</h1></body></html>".getBytes());
+				"<html><body><h1>Woot!</h1></body></html>".getBytes());
 		Thread.yield();
 		fss.launchFile("launch1.txt");
 		fss.launchFile("launch2.html");
@@ -601,11 +590,11 @@ public class FSServiceOuterTest extends FSServiceTestCase {
 	public void testFileSize() throws Exception {
 		fss.writeFile("launch1.txt", "Foobar".getBytes());
 		fss.writeFile("launch2.html",
-			"<html><body><h1>Woot!</h1></body></html>".getBytes());
+				"<html><body><h1>Woot!</h1></body></html>".getBytes());
 		Assert.assertEquals(fss.getFileSize("launch2.html"),
-			fss.readFile("launch2.html").length);
+				fss.readFile("launch2.html").length);
 		Assert.assertEquals(fss.getFileSize("launch1.txt"),
-			fss.readFile("launch1.txt").length);
+				fss.readFile("launch1.txt").length);
 		try {
 			fss.getFileSize("does/not/exist.txt");
 			Assert.fail();

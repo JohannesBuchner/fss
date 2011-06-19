@@ -24,6 +24,7 @@ import com.jakeapp.jake.fss.exceptions.NotAReadableFileException;
  * @see IFSService
  */
 public class FolderWatcher {
+
 	private static final Logger log = Logger.getLogger(FolderWatcher.class);
 
 	private File rootpath;
@@ -34,8 +35,7 @@ public class FolderWatcher {
 
 	private List<File> files = new ArrayList<File>();
 
-	private Set<IModificationListener> listeners =
-		new HashSet<IModificationListener>();
+	private Set<IModificationListener> listeners = new HashSet<IModificationListener>();
 
 	private Timer timer;
 
@@ -46,7 +46,7 @@ public class FolderWatcher {
 	private StreamFileHashCalculator hasher = null;
 
 	public FolderWatcher(File rootpath, long pollingInterval)
-		throws NotADirectoryException, NoSuchAlgorithmException {
+			throws NotADirectoryException, NoSuchAlgorithmException {
 
 		if (!rootpath.exists() || !rootpath.isDirectory()) {
 			throw new NotADirectoryException();
@@ -95,10 +95,11 @@ public class FolderWatcher {
 		@Override
 		public void run() {
 			if (!rootpath.isDirectory()) {
-				System.err.println("Bug: FolderScanTask was not shutdown, doing "
-					+ "it myself.");
+				System.err
+						.println("Bug: FolderScanTask was not shutdown, doing "
+								+ "it myself.");
 				System.err.println("FolderScanTask was not shutdown, doing "
-					+ "it myself.");
+						+ "it myself.");
 				cancel();
 				return;
 			}
@@ -146,7 +147,7 @@ public class FolderWatcher {
 							} catch (NotAReadableFileException e) {
 								if (log.isDebugEnabled())
 									log.debug("couldn't calculate hash for "
-										+ f, e);
+											+ f, e);
 								continue;
 							}
 
@@ -157,12 +158,12 @@ public class FolderWatcher {
 							} else {
 								if (log.isDebugEnabled())
 									log.debug("file : " + f
-										+ " hasn't changed (by hash)");
+											+ " hasn't changed (by hash)");
 							}
 						} else {
 							if (log.isDebugEnabled())
 								log.debug("file : " + f
-									+ " hasn't changed (by date)");
+										+ " hasn't changed (by date)");
 						}
 					} else {
 						HashValue newhash = null;
@@ -171,8 +172,8 @@ public class FolderWatcher {
 						} catch (NotAReadableFileException e) {
 							if (log.isDebugEnabled())
 								log.debug(
-									"couldn't calculate hash for new file " + f,
-									e);
+										"couldn't calculate hash for new file "
+												+ f, e);
 						}
 
 						lastmodifieddates.put(f, f.lastModified());
