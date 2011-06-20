@@ -254,10 +254,11 @@ public class FSServiceOuterTest extends FSServiceTestCase {
 		Assert.assertTrue(s.isEmpty());
 	}
 
-	@Test
+	@Test(timeout = 10000)
 	@Prerequisite(checker = DesktopSupportedChecker.class)
 	public void testModificationListener() throws Exception {
 		wipeRoot();
+		fss.setRootPath(new ProjectDir(mytempdir));
 		final String file = "myfile";
 		File f = new File(fss.getRootPath(), file);
 		final Semaphore s = new Semaphore(0);
@@ -300,6 +301,7 @@ public class FSServiceOuterTest extends FSServiceTestCase {
 			}
 		};
 		fss.addModificationListener(l);
+		Thread.sleep(1000);
 		fos = new FileOutputStream(f, true);
 		fos.write("bar".getBytes());
 		fos.close();
