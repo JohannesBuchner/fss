@@ -38,7 +38,6 @@
 			<name>SourceForge</name>
 			<url>sftp://frs.sourceforge.net:/home/frs/project/j/ja/jakeapp/maven/releases</url>
 		</repository>
-		</snapshotRepository>
 	</distributionManagement>
 	<scm>
 		<connection>scm:git:git://jakeapp.git.sourceforge.net/gitroot/jakeapp/fss/</connection>
