@@ -1,6 +1,5 @@
 package com.jakeapp.jake.fss.exceptions;
 
-import com.jakeapp.jake.fss.exceptions.NotAReadableFileException;
 
 /**
  * Thrown if tried to read a file which is in fact a directory or something else

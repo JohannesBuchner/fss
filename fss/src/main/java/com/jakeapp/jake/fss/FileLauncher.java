@@ -1,12 +1,12 @@
 package com.jakeapp.jake.fss;
 
-import com.jakeapp.jake.fss.exceptions.InvalidFilenameException;
-import com.jakeapp.jake.fss.exceptions.LaunchException;
-
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
+
+import com.jakeapp.jake.fss.exceptions.InvalidFilenameException;
+import com.jakeapp.jake.fss.exceptions.LaunchException;
 
 public class FileLauncher {
 
